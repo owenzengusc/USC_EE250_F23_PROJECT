@@ -12,7 +12,6 @@ with wave.open("recording.wav", "wb") as wavefile:
     wavefile.setnchannels(CHANNELS)
     wavefile.setsampwidth(p.get_sample_size(FORMAT))
     wavefile.setframerate(RATE)
-
     stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True)
     for _ in range(0, RATE // CHUNK_SIZE * RECORD_DURATION):
         wavefile.writeframes(stream.read(CHUNK_SIZE))
