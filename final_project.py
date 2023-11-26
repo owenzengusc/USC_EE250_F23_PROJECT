@@ -7,17 +7,17 @@ CHANNELS = 1             # mono recording, use 2 if you want stereo
 CHUNK_SIZE = 1024        # bytes
 RECORD_DURATION = 5     # how long the file will be in seconds
 
-with wave.open("recording.wav", "wb") as wavefile:
-    p = pyaudio.PyAudio()
-    wavefile.setnchannels(CHANNELS)
-    wavefile.setsampwidth(p.get_sample_size(FORMAT))
-    wavefile.setframerate(RATE)
-    stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True)
-    for _ in range(0, RATE // CHUNK_SIZE * RECORD_DURATION):
-        wavefile.writeframes(stream.read(CHUNK_SIZE))
-    stream.close()
+# with wave.open("recording.wav", "wb") as wavefile:
+#     p = pyaudio.PyAudio()
+#     wavefile.setnchannels(CHANNELS)
+#     wavefile.setsampwidth(p.get_sample_size(FORMAT))
+#     wavefile.setframerate(RATE)
+#     stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True)
+#     for _ in range(0, RATE // CHUNK_SIZE * RECORD_DURATION):
+#         wavefile.writeframes(stream.read(CHUNK_SIZE))
+#     stream.close()
 
-    p.terminate()
+#     p.terminate()
 
 # print("Done recording")
 # w = wave.open("recording.wav", "rb")
@@ -39,4 +39,35 @@ for i in range(0, length):
 import matplotlib.pyplot as plt
 plt.plot(audio_data, linestyle="-")
 plt.show()
+
+import time
+import grovepi
+
+# Connect the Grove Buzzer to digital port D8
+# SIG,NC,VCC,GND
+buzzer = 8
+
+grovepi.pinMode(buzzer,"OUTPUT")
+
+while True:
+    try:
+        # # Buzz for 1 second
+        # grovepi.digitalWrite(buzzer,1)
+        # print ('start')
+        # time.sleep(1)
+
+        # # Stop buzzing for 1 second and repeat
+        # grovepi.digitalWrite(buzzer,0)
+        # print ('stop')
+        # time.sleep(1)
+        for i in range (1,255):
+            grovepi.analogWrite(buzzer,i)
+            time.sleep(0.05)
+
+    except KeyboardInterrupt:
+        grovepi.digitalWrite(buzzer,0)
+        break
+    except IOError:
+        print ("Error")
+
 
