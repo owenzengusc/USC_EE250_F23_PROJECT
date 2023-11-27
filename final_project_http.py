@@ -1,6 +1,7 @@
 import speech_recognition as sr
 import pyttsx3
 import requests
+import json
 
 ip_address = "172.20.10.12:5000"
 
@@ -22,7 +23,11 @@ if __name__ == '__main__':
             if "hey" in words.lower():
                 engine.say("hello there")
             elif "weather" in words.lower():
-                engine.say("The weather is nice")
+                response_json = requests.get("http://{}/weather".format(ip_address))
+                response_dict = json.loads(response_json.text)
+                print("condition: {}".format(response_dict['condition']))
+                print("temperature: {}".format(response_dict['temperature']))
+                engine.say("condition: {}".format(response_dict['condition'])+"temperature: {}".format(response_dict['temperature']))
             elif "led" in words.lower():
                 if "on" in words.lower():
                     response = requests.put("http://{}/LED".format(ip_address), json={"LED": "ON"})

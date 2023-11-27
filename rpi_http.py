@@ -5,6 +5,7 @@ import time
 import sys
 import time
 import grovepi
+import requests
 from grovepi import *
 # By appending the folder of all the GrovePi libraries to the system path here,
 # we are successfully `import grovepi`
@@ -12,6 +13,7 @@ sys.path.append('../../Software/Python/')
 
 led = 4
 LED_STATUS = "OFF"
+WEATHER_API_KEY = "c246a82046604c3997b43435232711"
 
 
 import argparse
@@ -50,17 +52,6 @@ def get_mailbox_callback():
     # The object returned will be sent back as an HTTP message to the requester
     return response
 
-# TODO: Use Flash's route() decorator to add support to your HTTP server for
-# handling GET requests made to the URL '/mailbox/search'
-#
-# Use get_mailbox_callback() as an example. You'll need to use mailboxManager
-# for this request as well, so make sure to spend some time understanding how
-# it works and the features it provides.
-#
-# Your implementation should handle reasonable error cases as well, such as an
-# incorrect password.
-
-#def search_mailbox_callback():
 
 
 @app.route('/mailbox/delete', methods=['DELETE'])
@@ -112,6 +103,26 @@ def put_callback():
         response = {'Response': 'LED_OFF'}
     # The object returned will be sent back as an HTTP message to the requester
     return json.dumps(response)
+
+@app.route('/weather', methods=['GET'])
+def get_weather_callback():
+    params = {
+        'key': WEATHER_API_KEY,
+        'q': "Los Angeles",
+        'aqi': 'no'
+    }
+
+    response = requests.get('http://api.openweathermap.org/data/2.5/weather', params)
+
+    if response.status_code == 200: # Status: OK
+        data = response.json()
+        return jsonify({'temperature':data['current']['temp_f'], 
+                        'condition':data['current']['condition']['text']})
+
+    else:
+        print('error: got response code %d' % response.status_code)
+        print(response.text)
+        return jsonify({0.0:0.0, 0.0:0.0})
 
 if __name__ == '__main__':
 
