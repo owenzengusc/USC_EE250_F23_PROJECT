@@ -2,6 +2,8 @@ import wave, struct     # this will probably also need to be installed
 import pyaudio
 import matplotlib.pyplot as plt
 import numpy as np
+import json
+
 
 RATE = 16000
 FORMAT = pyaudio.paInt16 # 16-bit frames, ie audio is in 2 bytes
@@ -89,6 +91,26 @@ filtered_audio = np.fft.ifft(filtered_fft)
 # Convert the filtered audio back to 16-bit integer format
 # Ensure the real part is taken and properly scaled
 filtered_audio_int = np.int16(filtered_audio.real / np.max(np.abs(filtered_audio.real)) * 32767)
+print(filtered_audio_int)
+# output the filtered audio to a json file with RATE, FORMAT, CHANNELS, and CHUNK_SIZE, and the filtered_audio_int
+
+# Convert numpy array to list for JSON serialization
+filtered_audio_list = filtered_audio_int.tolist()
+
+# Prepare the data dictionary
+audio_data_dict = {
+    "rate": RATE,
+    "format": FORMAT,
+    "channels": CHANNELS,
+    "chunk_size": CHUNK_SIZE,
+    "audio_data": filtered_audio_list
+}
+
+# Write to a JSON file
+with open("filtered_audio_data.json", "w") as json_file:
+    json.dump(audio_data_dict, json_file)
+
+print("Filtered audio data saved as 'filtered_audio_data.json'")
 
 # Plot the filtered sound wave
 plt.subplot(2, 2, 3)  # 2 rows, 2 columns, position 3
@@ -110,5 +132,34 @@ with wave.open("filtered_recording.wav", "wb") as wavefile:
         wavefile.writeframes(struct.pack('<h', sample))
 
 print("Filtered recording saved as 'filtered_recording.wav'")
+
+import speech_recognition as sr
+import pyttsx3
+
+recognizer = sr.Recognizer()
+engine = pyttsx3.init()
+
+# Load the audio file
+audio_file = "filtered_recording.wav"
+with sr.AudioFile(audio_file) as source:
+    print(f"Loading audio file: {audio_file}")
+    audio = recognizer.record(source)
+
+try:
+    print("Google Speech Recognition thinks you said:")
+    recognized_text = recognizer.recognize_google(audio)
+    print(recognized_text)
+    engine.say("Google Speech Recognition thinks you said:")
+    engine.say(recognized_text)
+    engine.runAndWait()
+except sr.UnknownValueError:
+    print("Google Speech Recognition could not understand audio")
+    engine.say("Google Speech Recognition could not understand audio")
+    engine.runAndWait()
+except sr.RequestError as e:
+    print(f"Could not request results from Google Speech Recognition service; {e}")
+    engine.say("Could not request results from Google Speech Recognition service")
+    engine.runAndWait()
+
 
 
