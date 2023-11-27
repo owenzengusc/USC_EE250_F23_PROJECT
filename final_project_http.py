@@ -8,7 +8,6 @@ ip_address = "172.20.10.12:5000"
 if __name__ == '__main__':
     recognizer = sr.Recognizer()
     engine = pyttsx3.init()
-
     while True:
         with sr.Microphone() as source:
             print("Say something!")
@@ -23,11 +22,15 @@ if __name__ == '__main__':
             if "hey" in words.lower():
                 engine.say("hello there")
             elif "weather" in words.lower():
-                response_json = requests.get("http://{}/weather".format(ip_address))
-                response_dict = json.loads(response_json.text)
-                print("condition: {}".format(response_dict['condition']))
-                print("temperature: {}".format(response_dict['temperature']))
-                engine.say("condition: {}".format(response_dict['condition'])+"temperature: {}".format(response_dict['temperature']))
+                try:
+                    response_json = requests.get("http://{}/weather".format(ip_address))
+                    response_dict = json.loads(response_json.text)
+                    print("condition: {}".format(response_dict['condition']))
+                    print("temperature: {}".format(response_dict['temperature']))
+                    engine.say("today is {}".format(response_dict['condition'])+" and the temperature is {}".format(response_dict['temperature'])+"fahrenheit")
+                except:
+                    engine.say("error")
+                print(response_dict)
             elif "led" in words.lower():
                 if "on" in words.lower():
                     response = requests.put("http://{}/LED".format(ip_address), json={"LED": "ON"})
