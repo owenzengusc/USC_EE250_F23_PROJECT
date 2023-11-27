@@ -112,17 +112,16 @@ def get_weather_callback():
         'aqi': 'no'
     }
 
-    response = requests.get('http://api.openweathermap.org/data/2.5/weather', params)
+    response = requests.get('https://api.weatherapi.com/v1/current.json', params)
 
     if response.status_code == 200: # Status: OK
         data = response.json()
         return jsonify({'temperature':data['current']['temp_f'], 
                         'condition':data['current']['condition']['text']})
-
     else:
         print('error: got response code %d' % response.status_code)
         print(response.text)
-        return jsonify({0.0:0.0, 0.0:0.0})
+        return jsonify({0:0, 0:0})
 
 if __name__ == '__main__':
 
