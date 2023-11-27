@@ -13,10 +13,11 @@ sys.path.append('../../Software/Python/')
 led = 4
 LED_STATUS = "OFF"
 
+
 import argparse
 import json
 
-app = Flask('RaspberryPi Mailbox Server')
+app = Flask('RaspberryPi Server')
 
 """
 The @app.route() above the function is called a decorator. We will skip
@@ -42,8 +43,8 @@ def get_mailbox_callback():
     # the object that stores all the HTTP message data (header, payload, etc.).
     # We will skip explaining how this object gets here because the answer is
     # a bit long and out of the scope of this lab.
-
-    response = {'LED': LED_STATUS}
+    global LED_STATUS
+    response = jsonify({'Response': LED_STATUS})
     print(response)
 
     # The object returned will be sent back as an HTTP message to the requester
@@ -99,8 +100,10 @@ def post_mail_callback():
 def put_callback():
     payload = request.get_json()
     print(payload)
+    global LED_STATUS
     if payload['LED'] == 'ON':
         grovepi.digitalWrite(led,1)
+
         LED_STATUS = "ON"
         response = {'Response': 'LED_ON'}
     elif payload['LED'] == 'OFF':
@@ -112,4 +115,6 @@ def put_callback():
 
 if __name__ == '__main__':
 
+    grovepi.digitalWrite(led,0)
     app.run(debug=False, host='0.0.0.0', port=5000)
+
