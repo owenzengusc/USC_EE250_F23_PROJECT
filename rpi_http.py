@@ -7,11 +7,20 @@ import time
 import grovepi
 import requests
 from grovepi import *
+# set I2C to use the hardware bus
+grovepi.set_bus("RPI_1")
+
+# Connect the Grove Ultrasonic Ranger to digital port D4
+# SIG,NC,VCC,GND
+ultrasonic_ranger = 4
 # By appending the folder of all the GrovePi libraries to the system path here,
 # we are successfully `import grovepi`
 sys.path.append('../../Software/Python/')
 
 led = 4
+ultrasonic_read = 0
+threshold = 10
+warn_flag = False
 LED_STATUS = "OFF"
 WEATHER_API_KEY = "c246a82046604c3997b43435232711"
 
@@ -69,23 +78,30 @@ def delete_mail_callback():
 
     return response
 
-@app.route('/send-mail', methods=['POST'])
-def post_mail_callback():
+@app.route('/ultrasonic', methods=['GET'])
+def get_ultrasonic_callback():
     """
-    Summary: A callback for when POST is called on [host]:[port]/mailbox/send-mail
+    Summary: A callback which for when GET is called on [host]:[port]/mailbox
 
     Returns:
         string: A JSON-formatted string containing the response message
     """
 
-    # Get the payload containing the sender, subject and body parameters
-    payload = request.get_json()
-    print(payload)
-
-    response = {'Response': 'Mail sent'}
+    # Since we have `from flask import request` above, the 'request' object
+    # will (magically) be available when the callback is called. `request` is
+    # the object that stores all the HTTP message data (header, payload, etc.).
+    # We will skip explaining how this object gets here because the answer is
+    # a bit long and out of the scope of this lab.
+    global ultrasonic_read
+    if warn_flag == True: 
+        response = jsonify({'US Reading': ultrasonic_read, 'Warning': 'True'})
+    else:
+        response = jsonify({'US Reading': ultrasonic_read, 'Warning': 'False'})
+    print(response)
 
     # The object returned will be sent back as an HTTP message to the requester
-    return json.dumps(response)
+    return response
+
 
 @app.route('/LED', methods=['PUT'])
 def put_callback():
@@ -127,4 +143,15 @@ if __name__ == '__main__':
 
     grovepi.digitalWrite(led,0)
     app.run(debug=False, host='0.0.0.0', port=5000)
+    while True:
+        try:
+            # Read distance value from Ultrasonic
+            ultrasonic_read=grovepi.ultrasonicRead(ultrasonic_ranger)
+            if ultrasonic_read < threshold and warn_flag == False:
+                warn_flag = True
+            else:
+                warn_flag = False
+        except Exception as e:
+            print ("Error:{}".format(e))
+        time.sleep(5)
 
