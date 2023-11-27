@@ -50,4 +50,6 @@ if __name__ == '__main__':
     client.on_connect = on_connect
     client.connect(host="test.mosquitto.org", port=1883, keepalive=60)
     client.loop_start()
+    while True:
+        pass
             
