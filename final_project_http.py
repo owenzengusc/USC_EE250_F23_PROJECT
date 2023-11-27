@@ -36,6 +36,7 @@ if __name__ == '__main__':
                     engine.say("LED_OFF")
                 elif "status" in words.lower():
                     response = requests.get("http://{}/LED".format(ip_address))
+                    print(response.text)
                     engine.say(response.text)
             engine.runAndWait()
         except sr.UnknownValueError:
