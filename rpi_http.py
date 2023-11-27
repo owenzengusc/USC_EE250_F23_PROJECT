@@ -11,6 +11,7 @@ from grovepi import *
 sys.path.append('../../Software/Python/')
 
 led = 4
+LED_STATUS = "OFF"
 
 import argparse
 import json
@@ -42,8 +43,8 @@ def get_mailbox_callback():
     # We will skip explaining how this object gets here because the answer is
     # a bit long and out of the scope of this lab.
 
-    response = jsonify({'Response': 'Password does not match'})
-    print("response")
+    response = {'LED': LED_STATUS}
+    print(response)
 
     # The object returned will be sent back as an HTTP message to the requester
     return response
@@ -91,6 +92,21 @@ def post_mail_callback():
 
     response = {'Response': 'Mail sent'}
 
+    # The object returned will be sent back as an HTTP message to the requester
+    return json.dumps(response)
+
+@app.route('/LED', methods=['PUT'])
+def put_callback():
+    payload = request.get_json()
+    print(payload)
+    if payload['LED'] == 'ON':
+        grovepi.digitalWrite(led,1)
+        LED_STATUS = "ON"
+        response = {'Response': 'LED_ON'}
+    elif payload['LED'] == 'OFF':
+        grovepi.digitalWrite(led,0)
+        LED_STATUS = "OFF"
+        response = {'Response': 'LED_OFF'}
     # The object returned will be sent back as an HTTP message to the requester
     return json.dumps(response)
 
