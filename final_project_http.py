@@ -144,8 +144,10 @@ while input("Press enter to record audio") == "":
         #engine.say("Google Speech Recognition thinks you said:")
         words = recognizer.recognize_google(audio)
         engine.say(words)
+        engine.runAndWait()
         if "hey" in words.lower():
             engine.say("hello there")
+            engine.runAndWait()
         elif "weather" in words.lower():
             try:
                 response_json = requests.get("http://{}/weather".format(ip_address))
@@ -153,24 +155,31 @@ while input("Press enter to record audio") == "":
                 print("condition: {}".format(response_dict['condition']))
                 print("temperature: {}".format(response_dict['temperature']))
                 engine.say("today is {}".format(response_dict['condition'])+" and the temperature is {}".format(response_dict['temperature'])+"fahrenheit")
+                engine.runAndWait()
             except:
                 engine.say("error")
+                engine.runAndWait()
             print(response_dict)
         elif "led" in words.lower():
             if "on" in words.lower():
                 response = requests.put("http://{}/LED".format(ip_address), json={"LED": "ON"})
                 if response.status_code == 200:
                     engine.say("LED_ON")
+                    engine.runAndWait()
                     engine.say(response.text)
+                    engine.runAndWait()
                 else:
                     engine.say("error")
+                    engine.runAndWait()
             elif "off" in words.lower():
                 response = requests.put("http://{}/LED".format(ip_address), json={"LED": "OFF"})
                 engine.say("LED_OFF")
+                engine.runAndWait()
             elif "status" in words.lower():
                 response = requests.get("http://{}/LED".format(ip_address))
                 print(response.text)
                 engine.say(response.text)
+                engine.runAndWait()
         elif "ultrasonic" in words.lower():
             response = requests.get("http://{}/ultrasonic".format(ip_address))
             response_dict = json.loads(response.text)
@@ -178,17 +187,22 @@ while input("Press enter to record audio") == "":
                 if response_dict['Warning'] == 'True':
                     answer = "Warning there is an object in front of you at {} centimeters".format(response_dict['US Reading'])
                     engine.say(answer)
+                    engine.runAndWait()
                     print(answer)
                 else:
                     answer = "There is no object in front of you, the distance is {} centimeters".format(response_dict['US Reading'])
                     engine.say(answer)
+                    engine.runAndWait()
                     print(answer)
 
             # print(response.text)
             # engine.say(response.text)
+            #engine.runAndWait()
     except sr.UnknownValueError:
         print("Google Speech Recognition could not understand audio")
         engine.say("Google Speech Recognition could not understand audio")
+        engine.runAndWait()
     except sr.RequestError as e:
         print("Could not request results from Google Speech Recognition service; {0}".format(e))
         engine.say("Could not request results from Google Speech Recognition service")
+        engine.runAndWait()
