@@ -6,13 +6,14 @@ import sys
 import time
 import grovepi
 import requests
+import threading
 from grovepi import *
 # set I2C to use the hardware bus
 grovepi.set_bus("RPI_1")
 
 # Connect the Grove Ultrasonic Ranger to digital port D4
 # SIG,NC,VCC,GND
-ultrasonic_ranger = 4
+ultrasonic_ranger = 2
 # By appending the folder of all the GrovePi libraries to the system path here,
 # we are successfully `import grovepi`
 sys.path.append('../../Software/Python/')
@@ -138,20 +139,27 @@ def get_weather_callback():
         print('error: got response code %d' % response.status_code)
         print(response.text)
         return jsonify({0:0, 0:0})
-
-if __name__ == '__main__':
-
-    grovepi.digitalWrite(led,0)
-    app.run(debug=False, host='0.0.0.0', port=5000)
+def read_ultrasonic():
+    global ultrasonic_read, warn_flag
     while True:
         try:
-            # Read distance value from Ultrasonic
-            ultrasonic_read=grovepi.ultrasonicRead(ultrasonic_ranger)
-            if ultrasonic_read < threshold and warn_flag == False:
+            ultrasonic_read = grovepi.ultrasonicRead(ultrasonic_ranger)
+            print(ultrasonic_read)
+            if ultrasonic_read < threshold:
                 warn_flag = True
             else:
                 warn_flag = False
         except Exception as e:
-            print ("Error:{}".format(e))
-        time.sleep(5)
+            print("Error in ultrasonic read: {}".format(e))
+        time.sleep(5)  
+
+
+if __name__ == '__main__':
+    # Initialize ultrasonic reading thread
+    ultrasonic_thread = threading.Thread(target=read_ultrasonic)
+    ultrasonic_thread.daemon = True  # This ensures the thread exits when the main program does
+    ultrasonic_thread.start()
+
+    # Start Flask server
+    app.run(debug=False, host='0.0.0.0', port=5000)
 
