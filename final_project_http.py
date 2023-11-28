@@ -15,7 +15,8 @@ FORMAT = pyaudio.paInt16 # 16-bit frames, ie audio is in 2 bytes
 CHANNELS = 1             # mono recording, use 2 if you want stereo
 CHUNK_SIZE = 1024        # bytes
 RECORD_DURATION = 5     # how long the file will be in seconds
-ip_address = "172.20.10.12:5000"
+#ip_address = "172.20.10.12:5000"
+ip_address = "172.20.10.5:5000"
 
 recognizer = sr.Recognizer()
 engine = pyttsx3.init()
