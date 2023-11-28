@@ -81,11 +81,11 @@ def put_callback():
         grovepi.digitalWrite(led,1)
 
         LED_STATUS = "ON"
-        response = {'Response': 'LED_ON'}
+        response = {'Response': 'ON'}
     elif payload['LED'] == 'OFF':
         grovepi.digitalWrite(led,0)
         LED_STATUS = "OFF"
-        response = {'Response': 'LED_OFF'}
+        response = {'Response': 'OFF'}
     # The object returned will be sent back as an HTTP message to the requester
     return json.dumps(response)
 

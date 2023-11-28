@@ -157,7 +157,9 @@ while input("Press enter to record audio") == "":
                 response_dict = json.loads(response_json.text)
                 print("condition: {}".format(response_dict['condition']))
                 print("temperature: {}".format(response_dict['temperature']))
-                engine.say("today is {}".format(response_dict['condition'])+" and the temperature is {}".format(response_dict['temperature'])+"fahrenheit")
+                answer = "today is {}".format(response_dict['condition'])+" and the temperature is {}".format(response_dict['temperature'])+"fahrenheit"
+                print(answer)
+                engine.say(answer)
                 engine.runAndWait()
             except:
                 engine.say("error")
@@ -167,22 +169,33 @@ while input("Press enter to record audio") == "":
             if "on" in words.lower():
                 response = requests.put("http://{}/LED".format(ip_address), json={"LED": "ON"})
                 if response.status_code == 200:
-                    engine.say("LED_ON")
-                    engine.runAndWait()
-                    engine.say(response.text)
+                    answer = "LED is on"
+                    print(answer)
+                    engine.say(answer)
                     engine.runAndWait()
                 else:
+                    print("error")
                     engine.say("error")
                     engine.runAndWait()
             elif "off" in words.lower():
                 response = requests.put("http://{}/LED".format(ip_address), json={"LED": "OFF"})
-                engine.say("LED_OFF")
-                engine.runAndWait()
+                if response.status_code == 200:
+                    answer = "LED is off"
+                    print(answer)
+                    engine.say(answer)
+                    engine.runAndWait()
             elif "status" in words.lower():
                 response = requests.get("http://{}/LED".format(ip_address))
-                print(response.text)
-                engine.say(response.text)
-                engine.runAndWait()
+                response_dict = json.loads(response.text)
+                if response.status_code == 200:
+                    answer = "LED is {}".format(response_dict['Response'])
+                    print(answer)
+                    engine.say(answer)
+                    engine.runAndWait()
+                else:
+                    print("error")
+                    engine.say("error")
+                    engine.runAndWait()
         elif "ultrasonic" in words.lower():
             response = requests.get("http://{}/ultrasonic".format(ip_address))
             response_dict = json.loads(response.text)
