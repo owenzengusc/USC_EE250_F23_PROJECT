@@ -34,4 +34,17 @@
   - `threading`: For running the ultrasonic sensor reading in a separate thread.
   - `json`: For JSON data handling.
 
+## Example Voice Commands
+- "Hey, how's the weather?" - The system will fetch and tell you the current weather conditions.
+- "LED on" - Turns the LED connected to the Raspberry Pi on.
+- "LED off" - Turns the LED connected to the Raspberry Pi off.
+- "LED status" - Informs about the current status of the LED.
+- "Ultrasonic" - Gives the current reading from the ultrasonic sensor.
+
+## What Happens to Recordings
+- Your voice is recorded for a duration of 5 seconds upon pressing enter.
+- The recording is processed to filter out noise and then converted into text using Google Speech Recognition.
+- Based on the recognized text, specific actions are triggered (like fetching weather data, controlling LED, etc.).
+- The processed audio data and the FFT visualizations are temporarily saved locally for analysis purposes.
+
 Note: Ensure you have the latest version of Python installed and configure your Raspberry Pi with the necessary GrovePi sensors and actuators as per your project setup.
