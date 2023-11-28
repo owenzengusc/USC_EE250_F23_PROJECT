@@ -17,7 +17,8 @@ RECORD_DURATION = 5     # how long the file will be in seconds
 ip_address = "172.20.10.12:5000"
 
 recognizer = sr.Recognizer()
-engine = pyttsx3.init()
+#engine = pyttsx3.init()
+engine = pyttsx3.init('dummy')
 
 while input("Press enter to record audio") == "":
     print("Recording...")
