@@ -27,38 +27,17 @@ import json
 
 app = Flask('RaspberryPi Server')
 
-"""
-The @app.route() above the function is called a decorator. We will skip
-explaining decorators in detail for brevity. The functions below, such as
-get_mailbox_callback(), are callbacks that get called when certain types
-of HTTP request are received by the Flask server. With the decorator's
-input arguments below and the Flask server initialization in
-if __name__ == '__main__':, this first callback is set to be specifically
-called when a GET request is sent to the URL "http://0.0.0.0:[port]/mailbox"
-"""
 
+# This is a callback for when a GET request for LED is sent to the URL
 @app.route('/LED', methods=['GET'])
 def get_mailbox_callback():
-    """
-    Summary: A callback which for when GET is called on [host]:[port]/mailbox
-
-    Returns:
-        string: A JSON-formatted string containing the response message
-    """
-
-    # Since we have `from flask import request` above, the 'request' object
-    # will (magically) be available when the callback is called. `request` is
-    # the object that stores all the HTTP message data (header, payload, etc.).
-    # We will skip explaining how this object gets here because the answer is
-    # a bit long and out of the scope of this lab.
     global LED_STATUS
     response = jsonify({'Response': LED_STATUS})
     print(response)
-
     # The object returned will be sent back as an HTTP message to the requester
     return response
 
-
+# This is a callback for when a GET request for ultrasonic is sent to the URL
 @app.route('/ultrasonic', methods=['GET'])
 def get_ultrasonic_callback():
     global ultrasonic_read
@@ -71,7 +50,7 @@ def get_ultrasonic_callback():
     # The object returned will be sent back as an HTTP message to the requester
     return response
 
-
+# This is a callback for when a PUT request is sent to the URL
 @app.route('/LED', methods=['PUT'])
 def put_callback():
     payload = request.get_json()
@@ -89,16 +68,16 @@ def put_callback():
     # The object returned will be sent back as an HTTP message to the requester
     return json.dumps(response)
 
+# This is a callback for when a GET request is sent to the URL
 @app.route('/weather', methods=['GET'])
 def get_weather_callback():
+    # Make a request to the weather API
     params = {
         'key': WEATHER_API_KEY,
         'q': "Los Angeles",
         'aqi': 'no'
     }
-
     response = requests.get('https://api.weatherapi.com/v1/current.json', params)
-
     if response.status_code == 200: # Status: OK
         data = response.json()
         return jsonify({'temperature':data['current']['temp_f'], 
@@ -107,11 +86,16 @@ def get_weather_callback():
         print('error: got response code %d' % response.status_code)
         print(response.text)
         return jsonify({0:0, 0:0})
+    
+# Thread to read ultrasonic sensor
 def read_ultrasonic():
     global ultrasonic_read, warn_flag
     while True:
         try:
             ultrasonic_read = grovepi.ultrasonicRead(ultrasonic_ranger)
+            # If it has a overflow error, set it to max value
+            if ultrasonic_read == 65535:
+                ultrasonic_read = 350
             print(ultrasonic_read)
             if ultrasonic_read < threshold:
                 warn_flag = True
@@ -127,7 +111,6 @@ if __name__ == '__main__':
     ultrasonic_thread = threading.Thread(target=read_ultrasonic)
     ultrasonic_thread.daemon = True  # This ensures the thread exits when the main program does
     ultrasonic_thread.start()
-
     # Start Flask server
     app.run(debug=False, host='0.0.0.0', port=5000)
 

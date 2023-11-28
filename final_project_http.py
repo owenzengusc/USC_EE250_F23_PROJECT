@@ -6,7 +6,6 @@ import wave, struct     # this will probably also need to be installed
 import pyaudio
 import matplotlib.pyplot as plt
 import numpy as np
-import json
 
 #need pip install py3-tts
 
@@ -108,11 +107,11 @@ while input("Press enter to record audio") == "":
         "audio_data": filtered_audio_list
     }
 
-    # Write to a JSON file
-    with open("filtered_audio_data.json", "w") as json_file:
-        json.dump(audio_data_dict, json_file)
+    # # Write to a JSON file
+    # with open("filtered_audio_data.json", "w") as json_file:
+    #     json.dump(audio_data_dict, json_file)
 
-    print("Filtered audio data saved as 'filtered_audio_data.json'")
+    # print("Filtered audio data saved as 'filtered_audio_data.json'")
 
     # Plot the filtered sound wave
     plt.subplot(2, 2, 3)  # 2 rows, 2 columns, position 3
@@ -199,13 +198,13 @@ while input("Press enter to record audio") == "":
             response_dict = json.loads(response.text)
             if response.status_code == 200:
                 if response_dict['Warning'] == 'True':
-                    answer = "Warning there is an object in front of you at {} centimeters".format(response_dict['US Reading'])
+                    answer = "Warning there is an object in front of you at {} centimeters\n".format(response_dict['US Reading'])
                     print(answer)
                     engine.say(answer)
                     engine.runAndWait()
 
                 else:
-                    answer = "There is no object in front of you, the distance is {} centimeters".format(response_dict['US Reading'])
+                    answer = "There is no object in front of you, the distance is {} centimeters\n".format(response_dict['US Reading'])
                     print(answer)
                     engine.say(answer)
                     engine.runAndWait()
