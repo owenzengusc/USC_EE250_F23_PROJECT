@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 
+#need pip install py3-tts
+
 
 RATE = 16000
 FORMAT = pyaudio.paInt16 # 16-bit frames, ie audio is in 2 bytes
@@ -17,8 +19,8 @@ RECORD_DURATION = 5     # how long the file will be in seconds
 ip_address = "172.20.10.12:5000"
 
 recognizer = sr.Recognizer()
-#engine = pyttsx3.init()
-engine = pyttsx3.init('dummy')
+engine = pyttsx3.init()
+#engine = pyttsx3.init('dummy')
 
 while input("Press enter to record audio") == "":
     print("Recording...")
