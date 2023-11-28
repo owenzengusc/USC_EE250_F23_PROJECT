@@ -171,10 +171,21 @@ while input("Press enter to record audio") == "":
                 response = requests.get("http://{}/LED".format(ip_address))
                 print(response.text)
                 engine.say(response.text)
-            elif "ultrasonic" in words.lower():
-                response = requests.get("http://{}/ultrasonic".format(ip_address))
-                print(response.text)
-                engine.say(response.text)
+        elif "ultrasonic" in words.lower():
+            response = requests.get("http://{}/ultrasonic".format(ip_address))
+            response_dict = json.loads(response.text)
+            if response.status_code == 200:
+                if response_dict['Warning'] == 'True':
+                    answer = "Warning there is an object in front of you at {} centimeters".format(response_dict['US Reading'])
+                    engine.say(answer)
+                    print(answer)
+                else:
+                    answer = "There is no object in front of you, the distance is {} centimeters".format(response_dict['US Reading'])
+                    engine.say(answer)
+                    print(answer)
+
+            # print(response.text)
+            # engine.say(response.text)
     except sr.UnknownValueError:
         print("Google Speech Recognition could not understand audio")
         engine.say("Google Speech Recognition could not understand audio")
