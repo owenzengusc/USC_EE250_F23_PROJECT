@@ -143,11 +143,11 @@ while input("Press enter to record audio") == "":
 
     try:
         print("Google Speech Recognition thinks you said:")
-        print(recognizer.recognize_google(audio))
         #engine.say("Google Speech Recognition thinks you said:")
         words = recognizer.recognize_google(audio)
-        engine.say(words)
-        engine.runAndWait()
+        print(words)
+        # engine.say(words)
+        # engine.runAndWait()
         if "hey" in words.lower():
             engine.say("hello there")
             engine.runAndWait()
