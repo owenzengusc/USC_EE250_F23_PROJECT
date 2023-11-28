@@ -145,9 +145,7 @@ while input("Press enter to record audio") == "":
         #engine.say("Google Speech Recognition thinks you said:")
         words = recognizer.recognize_google(audio)
         print(words)
-        # engine.say(words)
-        # engine.runAndWait()
-        if "hey" in words.lower():
+        if "hey" or "hi" or "hey" in words.lower():
             engine.say("hello there")
             engine.runAndWait()
         elif "weather" in words.lower():
@@ -161,7 +159,6 @@ while input("Press enter to record audio") == "":
             except:
                 engine.say("error")
                 engine.runAndWait()
-            print(response_dict)
         elif "led" in words.lower():
             if "on" in words.lower():
                 response = requests.put("http://{}/LED".format(ip_address), json={"LED": "ON"})
