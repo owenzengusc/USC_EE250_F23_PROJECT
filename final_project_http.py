@@ -16,6 +16,9 @@ CHUNK_SIZE = 1024        # bytes
 RECORD_DURATION = 5     # how long the file will be in seconds
 ip_address = "172.20.10.12:5000"
 
+recognizer = sr.Recognizer()
+engine = pyttsx3.init()
+
 while input("Press enter to record audio") == "":
     print("Recording...")
     with wave.open("recording.wav", "wb") as wavefile:
@@ -87,7 +90,7 @@ while input("Press enter to record audio") == "":
     # Convert the filtered audio back to 16-bit integer format
     # Ensure the real part is taken and properly scaled
     filtered_audio_int = np.int16(filtered_audio.real / np.max(np.abs(filtered_audio.real)) * 32767)
-    print(filtered_audio_int)
+    #print(filtered_audio_int)
     # output the filtered audio to a json file with RATE, FORMAT, CHANNELS, and CHUNK_SIZE, and the filtered_audio_int
 
     # Convert numpy array to list for JSON serialization
@@ -128,9 +131,6 @@ while input("Press enter to record audio") == "":
             wavefile.writeframes(struct.pack('<h', sample))
 
     print("Filtered recording saved as 'filtered_recording.wav'")
-
-    recognizer = sr.Recognizer()
-    engine = pyttsx3.init()
 
     # Load the audio file
     audio_file = "filtered_recording.wav"
