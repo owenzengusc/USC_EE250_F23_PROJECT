@@ -11,12 +11,6 @@ from grovepi import *
 # set I2C to use the hardware bus
 grovepi.set_bus("RPI_1")
 
-# Connect the Grove Ultrasonic Ranger to digital port D4
-# SIG,NC,VCC,GND
-ultrasonic_ranger = 2
-# By appending the folder of all the GrovePi libraries to the system path here,
-# we are successfully `import grovepi`
-sys.path.append('../../Software/Python/')
 
 led = 4
 ultrasonic_read = 0
