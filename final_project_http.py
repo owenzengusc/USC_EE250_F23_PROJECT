@@ -155,9 +155,7 @@ while input("Press enter to record audio") == "":
             try:
                 response_json = requests.get("http://{}/weather".format(ip_address))
                 response_dict = json.loads(response_json.text)
-                print("condition: {}".format(response_dict['condition']))
-                print("temperature: {}".format(response_dict['temperature']))
-                answer = "today is {}".format(response_dict['condition'])+" and the temperature is {}".format(response_dict['temperature'])+"fahrenheit"
+                answer = "today is {}".format(response_dict['condition'])+" and the temperature is {}".format(response_dict['temperature'])+" fahrenheit"
                 print(answer)
                 engine.say(answer)
                 engine.runAndWait()
@@ -202,14 +200,16 @@ while input("Press enter to record audio") == "":
             if response.status_code == 200:
                 if response_dict['Warning'] == 'True':
                     answer = "Warning there is an object in front of you at {} centimeters".format(response_dict['US Reading'])
+                    print(answer)
                     engine.say(answer)
                     engine.runAndWait()
-                    print(answer)
+
                 else:
                     answer = "There is no object in front of you, the distance is {} centimeters".format(response_dict['US Reading'])
+                    print(answer)
                     engine.say(answer)
                     engine.runAndWait()
-                    print(answer)
+
 
             # print(response.text)
             # engine.say(response.text)
