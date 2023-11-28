@@ -117,7 +117,7 @@ while input("Press enter to record audio") == "":
 
     # Display the plots
     plt.tight_layout()  # Adjusts subplot params so that subplots fit into the figure area
-    plt.show()
+    #plt.show()
 
     # Write the filtered audio to a new wave file
     with wave.open("filtered_recording.wav", "wb") as wavefile:
