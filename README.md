@@ -4,12 +4,10 @@
 - Owen Zeng
 - Felix Chen
 
-## Demo Video
-[View Demo Online](<Link to your video>)
 
 ## Instructions to Compile/Execute Programs
 1. **final_project_http.py (Run on Laptop)**
-   - Install required libraries: `pyaudio`, `matplotlib`, `numpy`, `speech_recognition`, `pyttsx3`, `requests`, `wave`, `struct`.
+   - Install required libraries: `pyaudio`, `matplotlib`, `numpy`, `speech_recognition`, `pyttsx3`, `requests`, `wave`, `struct`. If you are working on a MAC OS, you will need to use  `pip install py3-tts`.
    - Execute the script: `python final_project_http.py`.
    - Follow the on-screen instructions to record and process audio commands.
 
