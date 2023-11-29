@@ -47,7 +47,8 @@ function App() {
       newState["LED"] = "OFF";
     }
     try{
-    await axios.put(`http://${ipaddress}/LED`, newState);
+      await axios.put(`http://${ipaddress}/LED`, newState);
+      setLedState(newState["LED"])
     } catch(err) {
       console.log(err);
     }
@@ -69,8 +70,8 @@ function App() {
     <div className="card bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition-shadow duration-300 ease-in-out">
       <button 
         className="btn px-6 py-3 bg-blue-500 text-white rounded-lg font-semibold text-lg hover:bg-blue-600 shadow transition duration-300 ease-in-out transform hover:-translate-y-1"
-        onClick={() => checkLED()}>
-        Check LED Status
+        onClick={() => toggleLED()}>
+        Toggle LED
       </button>
       <p className="text-center mt-4 text-lg font-medium">{ledState}</p>
     </div>
@@ -90,11 +91,6 @@ function App() {
       </button>
       <p className="text-center mt-4 text-lg font-medium">{weather}</p>
     </div>
-    <button 
-      className="btn w-full px-6 py-3 bg-purple-500 text-white rounded-lg font-semibold text-lg hover:bg-purple-600 shadow transition duration-300 ease-in-out transform hover:-translate-y-1"
-      onClick={() => toggleLED()}>
-      Toggle LED State
-    </button>
   </div>
 </div>
   );
