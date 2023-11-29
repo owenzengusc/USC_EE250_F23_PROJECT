@@ -15,7 +15,7 @@ function App() {
       let res = await axios.get(`http://${ipaddress}/LED`);
       console.log(res)
       console.log(res.data);
-      setLedState(res.data);
+      setLedState(res.data.Response);
     } catch {
       setLedState("RPi not online");
     }
@@ -25,7 +25,7 @@ function App() {
     try {
       let res = await axios.get(`http://${ipaddress}/ultrasonic`);
       console.log(res.data);
-      setDistance(res.data);
+      setDistance(res.data["US Reading"]);
     } catch {
       setDistance("RPi not online")
     }
@@ -35,18 +35,22 @@ function App() {
     try {
       let res = await axios.get(`http://${ipaddress}/weather`);
       console.log(res.data);
-      setWeather(res.data);
+      setWeather(`Condition: ${res.data.condition}\nTemperature: ${res.data.temperature}`);
     } catch {
       setWeather("RPi not online")
     }
   }
 
   const toggleLED = async () => {
-    let newState = "ON";
+    let newState = {"LED": "ON"};
     if(ledState === "ON") {
-      newState = "OFF";
+      newState["LED"] = "OFF";
     }
+    try{
     await axios.put(`http://${ipaddress}/LED`, newState);
+    } catch(err) {
+      console.log(err);
+    }
   }
 
   // On startup, check everything

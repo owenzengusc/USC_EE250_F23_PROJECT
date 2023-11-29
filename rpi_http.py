@@ -58,6 +58,7 @@ def put_callback():
     payload = request.get_json()
     print(payload)
     global LED_STATUS
+    print(led)
     if payload['LED'] == 'ON':
         grovepi.digitalWrite(led,1)
 
@@ -94,6 +95,7 @@ def read_ultrasonic():
     global ultrasonic_read, warn_flag
     while True:
         try:
+            print("here")
             ultrasonic_read = grovepi.ultrasonicRead(ultrasonic_ranger)
             # If it has a overflow error, set it to max value
             if ultrasonic_read == 65535:
