@@ -8,6 +8,7 @@ import grovepi
 import requests
 import threading
 from grovepi import *
+from flask_cors import CORS
 # set I2C to use the hardware bus
 grovepi.set_bus("RPI_1")
 
@@ -26,6 +27,7 @@ import argparse
 import json
 
 app = Flask('RaspberryPi Server')
+CORS(app)
 
 
 # This is a callback for when a GET request for LED is sent to the URL
