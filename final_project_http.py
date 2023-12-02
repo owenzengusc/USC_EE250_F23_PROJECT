@@ -2,28 +2,30 @@ import speech_recognition as sr
 import pyttsx3
 import requests
 import json
-import wave, struct     # this will probably also need to be installed
+import wave, struct    
 import pyaudio
 import matplotlib.pyplot as plt
 import numpy as np
 
-#need pip install py3-tts
 
-
+# parameters for the wave file
 RATE = 16000
 FORMAT = pyaudio.paInt16 # 16-bit frames, ie audio is in 2 bytes
 CHANNELS = 1             # mono recording, use 2 if you want stereo
 CHUNK_SIZE = 1024        # bytes
 RECORD_DURATION = 5     # how long the file will be in seconds
 #ip_address = "172.20.10.12:5000"
+# ip address of the raspberry pi
 ip_address = "172.20.10.5:5000"
 
+# initialize the recognizer
 recognizer = sr.Recognizer()
 engine = pyttsx3.init()
-#engine = pyttsx3.init('dummy')
 
+# wait for user to press enter to start recording
 while input("Press enter to record audio") == "":
     print("Recording...")
+    # Record audio for RECORD_DURATION=5 seconds
     with wave.open("recording.wav", "wb") as wavefile:
         p = pyaudio.PyAudio()
         wavefile.setnchannels(CHANNELS)
@@ -40,18 +42,20 @@ while input("Press enter to record audio") == "":
     audio_data = []
     w = wave.open("recording.wav", "r")
     length = w.getnframes()
+    # loop through the wave file and store the audio data
     for i in range(0, length):
         waveData = w.readframes(1)
         data = struct.unpack("<h", waveData)
         audio_data.append(int(data[0]))
 
+    # Plot the original audio data
     plt.figure(figsize=(12, 12)) 
-    # Plot the original sound wave
     plt.subplot(2, 2, 1)  # 2 rows, 2 columns, position 1
     plt.plot(audio_data, linestyle="-")
     plt.title("Original Audio Waveform")
     plt.xlabel("Sample")
     plt.ylabel("Amplitude")
+
     # Perform FFT
     n = len(audio_data)
     audio_fft = np.fft.fft(audio_data)
@@ -94,25 +98,6 @@ while input("Press enter to record audio") == "":
     # Ensure the real part is taken and properly scaled
     filtered_audio_int = np.int16(filtered_audio.real / np.max(np.abs(filtered_audio.real)) * 32767)
     #print(filtered_audio_int)
-    # output the filtered audio to a json file with RATE, FORMAT, CHANNELS, and CHUNK_SIZE, and the filtered_audio_int
-
-    # Convert numpy array to list for JSON serialization
-    filtered_audio_list = filtered_audio_int.tolist()
-
-    # Prepare the data dictionary
-    audio_data_dict = {
-        "rate": RATE,
-        "format": FORMAT,
-        "channels": CHANNELS,
-        "chunk_size": CHUNK_SIZE,
-        "audio_data": filtered_audio_list
-    }
-
-    # # Write to a JSON file
-    # with open("filtered_audio_data.json", "w") as json_file:
-    #     json.dump(audio_data_dict, json_file)
-
-    # print("Filtered audio data saved as 'filtered_audio_data.json'")
 
     # Plot the filtered sound wave
     plt.subplot(2, 2, 3)  # 2 rows, 2 columns, position 3
@@ -123,7 +108,9 @@ while input("Press enter to record audio") == "":
 
     # Display the plots
     plt.tight_layout()  # Adjusts subplot params so that subplots fit into the figure area
+    # hide the graph for now
     #plt.show()
+    # save the graph
     plt.savefig('./static/voice.jpg', bbox_inches='tight')
 
     # Write the filtered audio to a new wave file
@@ -144,7 +131,7 @@ while input("Press enter to record audio") == "":
 
     try:
         print("Google Speech Recognition thinks you said:")
-        #engine.say("Google Speech Recognition thinks you said:")
+        # recognize speech using Google Speech Recognition
         words = recognizer.recognize_google(audio)
         print(words)
         if "hey" in words.lower():
@@ -208,10 +195,6 @@ while input("Press enter to record audio") == "":
                     engine.say(answer)
                     engine.runAndWait()
 
-
-            # print(response.text)
-            # engine.say(response.text)
-            #engine.runAndWait()
     except sr.UnknownValueError:
         print("Google Speech Recognition could not understand audio")
         engine.say("Google Speech Recognition could not understand audio")

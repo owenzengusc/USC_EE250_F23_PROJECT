@@ -12,10 +12,12 @@ from flask_cors import CORS
 # set I2C to use the hardware bus
 grovepi.set_bus("RPI_1")
 
+# Connect the Grove Ultrasonic Ranger to digital port D2
 ultrasonic_ranger = 2
 
-
+# Connect the Grove LED to digital port D4
 led = 4
+
 ultrasonic_read = 0
 threshold = 10
 warn_flag = False
@@ -59,12 +61,15 @@ def put_callback():
     print(payload)
     global LED_STATUS
     print(led)
+    # If the command is to turn on the LED
     if payload['LED'] == 'ON':
+        # Turn on the LED
         grovepi.digitalWrite(led,1)
-
         LED_STATUS = "ON"
         response = {'Response': 'ON'}
+    # If the command is to turn off the LED
     elif payload['LED'] == 'OFF':
+        # Turn off the LED
         grovepi.digitalWrite(led,0)
         LED_STATUS = "OFF"
         response = {'Response': 'OFF'}
@@ -78,6 +83,7 @@ def get_weather_callback():
     params = {
         'key': WEATHER_API_KEY,
         'q': "Los Angeles",
+        # dont need air quality
         'aqi': 'no'
     }
     response = requests.get('https://api.weatherapi.com/v1/current.json', params)
