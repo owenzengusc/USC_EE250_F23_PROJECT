@@ -48,3 +48,8 @@
 - The processed audio data and the FFT visualizations are temporarily saved locally for analysis purposes.
 
 Note: Ensure you have the latest version of Python installed and configure your Raspberry Pi with the necessary GrovePi sensors and actuators as per your project setup.
+
+brew install node
+cd ee250_frontend
+npm install
+npm start
