@@ -4,7 +4,6 @@
 - Owen Zeng
 - Felix Chen
 
-
 ## Instructions to Compile/Execute Programs
 1. **final_project_http.py (Run on Laptop)**
    - Install required libraries: `pyaudio`, `matplotlib`, `numpy`, `speech_recognition`, `pyttsx3`, `requests`, `wave`, `struct`. If you are working on a MAC OS, you will need to use  `pip install py3-tts`.
@@ -16,6 +15,36 @@
    - Set up GrovePi: Follow [GrovePi setup instructions](https://github.com/DexterInd/GrovePi).
    - Run the script: `python rpi_http.py`.
    - The server will start, and the Raspberry Pi will begin responding to API requests.
+
+3. **Web Frontend (Alternative Visualization)**
+   - Navigate to the `ee250_frontend` directory.
+   - Install Node.js and npm (for macOS):
+     ```bash
+     brew install node
+     ```
+     Go to the frontend folder
+     ```bash
+     cd ee250_frontend
+     ```
+   - Install dependencies:
+     ```bash
+     npm install
+     ```
+   - Start the web server:
+     ```bash
+     npm start
+     ```
+   - The web frontend allows you to toggle the light status, get weather updates, and ultrasonic sensor readings from the Raspberry Pi.
+
+4. **web.py (Alternative Simple Web Frontend)**
+   - Run the `web.py` script in a separate terminal while the `final_project_http.py` and `rpi_http.py` are running.
+   - Access the web interface:
+     ```bash
+     http://127.0.0.1:5000
+     ```
+   - The web interface displays the latest audio recording plots. Refresh the page to see updates after making new recordings.
+
+
 
 ## External Libraries Used
 - **Laptop (final_project_http.py)**
@@ -48,8 +77,3 @@
 - The processed audio data and the FFT visualizations are temporarily saved locally for analysis purposes.
 
 Note: Ensure you have the latest version of Python installed and configure your Raspberry Pi with the necessary GrovePi sensors and actuators as per your project setup.
-
-brew install node
-cd ee250_frontend
-npm install
-npm start
