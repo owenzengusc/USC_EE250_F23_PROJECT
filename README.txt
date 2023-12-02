@@ -12,7 +12,7 @@ Instructions to Compile/Execute Programs
 
 2. rpi_http.py (Run on Raspberry Pi)
    - Install Flask: pip install Flask.
-   - Set up GrovePi: Follow GrovePi setup instructions (https://github.com/DexterInd/GrovePi).
+   - Set up GrovePi: put on the Grovepi kit, connect LED to D4 and ultrasonic sensor to D2.
    - Run the script: python rpi_http.py.
    - The server will start, and the Raspberry Pi will begin responding to API requests.
 
